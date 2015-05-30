@@ -21,9 +21,9 @@ Sufei, Charlyn, Alvin, Reinard
 * Share on social media
 
 ### Permissions
-* write external storage
-* read external storage
-* camera
+* write external storage [android.permission.WRITE_EXTERNAL_STORAGE]
+* read external storage [android.permission.READ_EXTERNAL_STORAGE]
+* camera [android.permission.CAMERA]
 
 ---
 ---
