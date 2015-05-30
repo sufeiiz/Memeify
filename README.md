@@ -5,6 +5,7 @@ Alvin, Charlyn, Reinard, Sufei
 
 
 ### Tasks
+* portrait orientation
 * Handle vanilla meme format (toggle button)
 * Handle demotivational poster format (toggle button)
 * Intent for camera -> user take/retake -> jump back to app
