@@ -1,7 +1,7 @@
 # Memeify
 
 ### TEAM SCAR
-Alvin, Charlyn, Reinard, Sufei
+Sufei, Charlyn, Alvin, Reinard
 
 
 ### Tasks
