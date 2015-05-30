@@ -13,6 +13,7 @@ Sufei, Charlyn, Alvin, Reinard
 * save meme to camera roll
 * share meme on social media (implicit intent - android does it)
 * layout/style sheet
+* savedinstancestate
 
 ### Views
 * Home Screen - Do you wanna use camera or camera roll? 
