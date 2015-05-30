@@ -24,7 +24,6 @@ Sufei, Charlyn, Alvin, Reinard
 * write external storage
 * read external storage
 * camera
-* send
 
 ---
 ---
