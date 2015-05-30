@@ -20,7 +20,15 @@ Alvin, Charlyn, Reinard, Sufei
 * Text editing view 
 * Share on social media
 
+### Permissions
+* write external storage
+* read external storage
+* camera
+* send
+
 ---
+---
+
 ### Meme-ify Me
 
 #### Objective
