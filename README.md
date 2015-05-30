@@ -5,7 +5,12 @@ Alvin, Charlyn, Reinard, Sufei
 
 
 ### Tasks
-* 
+* Handle vanilla meme format
+* Handle demotivational poster format
+* Intent for camera -> user take/retake -> jump back to app
+* Intent for camera roll -> jumo back to app
+* save meme to camera roll
+* share meme on social media
 
 
 
