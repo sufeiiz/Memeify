@@ -1,4 +1,4 @@
 # Memeify
 
-### Group Members
+### TEAM SCAR
 Alvin, Charlyn, Reinard, Sufei
