@@ -11,6 +11,7 @@ Alvin, Charlyn, Reinard, Sufei
 * Intent for camera roll -> jumo back to app
 * save meme to camera roll
 * share meme on social media
+* Style sheet?
 
 ### Views
 * Home Screen - Do you wanna use camera or camera roll? 
