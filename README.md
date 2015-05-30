@@ -12,7 +12,7 @@ Sufei, Charlyn, Alvin, Reinard
 * Intent for camera roll -> jumo back to app
 * save meme to camera roll
 * share meme on social media (implicit intent - android does it)
-* Style sheet?
+* layout/style sheet
 
 ### Views
 * Home Screen - Do you wanna use camera or camera roll? 
