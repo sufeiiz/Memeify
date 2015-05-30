@@ -5,12 +5,12 @@ Alvin, Charlyn, Reinard, Sufei
 
 
 ### Tasks
-* Handle vanilla meme format
-* Handle demotivational poster format
+* Handle vanilla meme format (toggle button)
+* Handle demotivational poster format (toggle button)
 * Intent for camera -> user take/retake -> jump back to app
 * Intent for camera roll -> jumo back to app
 * save meme to camera roll
-* share meme on social media
+* share meme on social media (implicit intent - android does it)
 * Style sheet?
 
 ### Views
