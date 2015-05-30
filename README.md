@@ -12,7 +12,11 @@ Alvin, Charlyn, Reinard, Sufei
 * save meme to camera roll
 * share meme on social media
 
-
+### Views
+* Home Screen - Do you wanna use camera or camera roll? 
+* Choose which meme you want (toggle?)
+* Text editing view 
+* Share on social media
 
 ---
 ### Meme-ify Me
