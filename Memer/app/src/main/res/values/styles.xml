@@ -5,4 +5,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="CamButtons">
+        <item name="android:background">#C1E6FF</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
 </resources>
