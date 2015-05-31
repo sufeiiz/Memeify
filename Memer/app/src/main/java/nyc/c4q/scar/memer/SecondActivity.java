@@ -1,40 +1,48 @@
 package nyc.c4q.scar.memer;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by sufeizhao on 5/31/15.
  */
-public class SecondActivity extends AppCompatActivity{
+public class SecondActivity extends AppCompatActivity {
 
+    private Uri uri;
     private Intent intent;
     private ImageView imageView;
+    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
         Button changeImage = (Button) findViewById(R.id.change_img);
 
-        if (savedInstanceState == null) {
-            Bitmap bitmap = this.getIntent().getExtras().getParcelable("image");
-            imageView.setImageBitmap(bitmap);
+        if (savedInstanceState != null) {
+            uri = (Uri) savedInstanceState.get("luckyM");
+            imageView.setImageURI(uri);
+
+        } else {
+
+            uri = (Uri) getIntent().getExtras().get("luckyM");
+            imageView.setImageURI(uri);
         }
 
         changeImage.setOnClickListener(new View.OnClickListener() {
@@ -45,33 +53,26 @@ public class SecondActivity extends AppCompatActivity{
         });
     }
 
+
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bitmap bitmap;
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Uri pickedImage = data.getData();
-            String[] filePath = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-            cursor.moveToFirst();
-
-            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            bitmap = BitmapFactory.decodeFile(imagePath);
-            bitmap = MainActivity.scaleDownBitmap(bitmap,100, this);
-            imageView.setImageBitmap(bitmap);
-            cursor.close();
+            uri = data.getData();
+            imageView.setImageURI(uri);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            if (data != null) {
-                bitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(bitmap);
-            }
+
+            uri = Uri.parse("file:///sdcard/picture.jpg");
+            imageView.setImageURI(null);
+            imageView.setImageURI(Uri.parse(stringVariable));
+
         }
     }
+
 
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {
@@ -84,8 +85,14 @@ public class SecondActivity extends AppCompatActivity{
 
                 if (items[which].equalsIgnoreCase("Camera")) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    Uri imageFileUri = Uri.parse(stringVariable);
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
+
+
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, 0);
+
                     }
                 }
 
@@ -97,5 +104,31 @@ public class SecondActivity extends AppCompatActivity{
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    //saves the current state
+    @Override
+    public void onSaveInstanceState(Bundle toSave) {
+        super.onSaveInstanceState(toSave);
+        toSave.putParcelable("luckyM", uri);
+    }
+
+    private File createImageFile() throws IOException {
+        String mCurrentPhotoPath;
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 }

@@ -10,21 +10,36 @@
         android:layout_weight="2"
         android:orientation="vertical">
         <Switch
-            android:layout_weight="1"
+            android:id="@+id/switch1"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textOn="Vanilla Meme"
+            android:textOff="Demotivational Poster"
+            android:layout_gravity="center"
+            android:typeface="serif"/>
+
+        <LinearLayout
+            android:layout_weight="5"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:id="@+id/switch1"
-            android:textOn="Vanilla"
-            android:textOff="Demotivational Poster"
-            android:layout_centerHorizontal="true"/>
-        <Button
-            android:id="@+id/change_img"
-            android:layout_weight="1"
-            android:text="Change Image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:orientation="horizontal">
+            <Switch
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textOn="Top"
+                android:textOff="Bottom"
+                android:layout_gravity="center"
+                android:typeface="serif"/>
+            <Button
+                android:id="@+id/change_img"
+                android:layout_weight="1"
+                android:text="Change Image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

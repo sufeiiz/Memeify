@@ -1,33 +1,21 @@
 package nyc.c4q.scar.memer;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
-public class MainActivity extends ActionBarActivity {
-    private Intent intent, changeActivity;
+public class MainActivity extends AppCompatActivity {
+
+    private Intent intent;
+    private Uri imageFileUri;
+    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +23,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton camera = (ImageButton) findViewById(R.id.camera);
-
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListViewDialog();
-                changeActivity = new Intent(MainActivity.this, SecondActivity.class);
             }
         });
     }
@@ -50,30 +36,18 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bitmap bitmap;
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Uri pickedImage = data.getData();
-            String[] filePath = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-            cursor.moveToFirst();
-
-            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            bitmap = BitmapFactory.decodeFile(imagePath);
-            cursor.close();
-
-            bitmap = scaleDownBitmap(bitmap,225, this);
-            changeActivity.putExtra("image", bitmap);
-            startActivity(changeActivity);
+            imageFileUri = data.getData();
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            if (data != null) {
-                bitmap = (Bitmap) data.getExtras().get("data");
-                changeActivity.putExtra("image", bitmap);
-                startActivity(changeActivity);
-            }
+            imageFileUri = Uri.parse(stringVariable);
+
         }
+
+        Intent changeActivity = new Intent(MainActivity.this, SecondActivity.class);
+        changeActivity.putExtra("luckyM", imageFileUri);
+        startActivity(changeActivity);
     }
 
     //This is for the dialog box: Camera or Gallery
@@ -87,6 +61,8 @@ public class MainActivity extends ActionBarActivity {
 
                 if (items[which].equalsIgnoreCase("Camera")) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.parse(stringVariable));
+
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, 0);
                     }
@@ -102,35 +78,4 @@ public class MainActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-    // makes bitmap smaller so gallery images can be imported
-    public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
-
-        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
-
-        int h= (int) (newHeight*densityMultiplier);
-        int w= (int) (h * photo.getWidth()/((double) photo.getHeight()));
-
-        photo=Bitmap.createScaledBitmap(photo, w, h, true);
-
-        return photo;
-    }
-
-    //Creates a unique file name for each picture
-    String mCurrentPhotoPath;
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
 }
