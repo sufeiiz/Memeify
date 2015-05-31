@@ -26,9 +26,8 @@ import java.util.Date;
 
 
 public class MainActivity extends ActionBarActivity {
+    private Intent intent, changeActivity;
     private ImageView imageView;
-    private Bitmap bitmap;
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +35,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton camera = (ImageButton) findViewById(R.id.camera);
-        imageView = (ImageView) findViewById(R.id.insert_pic_id);
-
-        //Save the current state of the photo
-        if (savedInstanceState != null) {
-            bitmap = savedInstanceState.getParcelable("bitmap");
-            imageView.setImageBitmap(bitmap);
-        }
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListViewDialog();
-
-                intent = new Intent(getApplicationContext(), SecondActivity.class);
-                startActivity(intent);
+                changeActivity = new Intent(MainActivity.this, SecondActivity.class);
             }
         });
     }
@@ -60,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Bitmap bitmap;
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             Uri pickedImage = data.getData();
             String[] filePath = {MediaStore.Images.Media.DATA};
@@ -71,12 +62,15 @@ public class MainActivity extends ActionBarActivity {
             imageView.setImageBitmap(BitmapFactory.decodeFile(imagePath));
             bitmap = BitmapFactory.decodeFile(imagePath);
             cursor.close();
+            changeActivity.putExtra("image", bitmap);
+            startActivity(changeActivity);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             if (data != null) {
                 bitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(bitmap);
+                changeActivity.putExtra("image", bitmap);
+                startActivity(changeActivity);
             }
         }
     }
@@ -105,12 +99,5 @@ public class MainActivity extends ActionBarActivity {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
-    }
-
-    //saves the current state
-    @Override
-       public void onSaveInstanceState(Bundle toSave) {
-        super.onSaveInstanceState(toSave);
-        toSave.putParcelable("bitmap", bitmap);
     }
 }
