@@ -1,6 +1,7 @@
 package nyc.c4q.scar.memer;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,12 +29,8 @@ public class SecondActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        ImageView imageView = (ImageView) findViewById(R.id.insert_pic_id);
+        imageView = (ImageView) findViewById(R.id.insert_pic_id);
         Button changeImage = (Button) findViewById(R.id.change_img);
-
-
-
-
 
         if (savedInstanceState == null) {
             Bitmap bitmap = this.getIntent().getExtras().getParcelable("image");
@@ -62,7 +59,9 @@ public class SecondActivity extends AppCompatActivity{
             cursor.moveToFirst();
 
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+            bitmap = BitmapFactory.decodeFile(imagePath);
+            bitmap = MainActivity.scaleDownBitmap(bitmap,100, this);
+            imageView.setImageBitmap(bitmap);
             cursor.close();
         }
 

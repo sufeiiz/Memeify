@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
             bitmap = BitmapFactory.decodeFile(imagePath);
             cursor.close();
 
-            bitmap = scaleDownBitmap(bitmap,100, this);
+            bitmap = scaleDownBitmap(bitmap,225, this);
             changeActivity.putExtra("image", bitmap);
             startActivity(changeActivity);
         }
