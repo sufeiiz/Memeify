@@ -1,6 +1,7 @@
 package nyc.c4q.scar.memer;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,7 +28,6 @@ import java.util.Date;
 
 public class MainActivity extends ActionBarActivity {
     private Intent intent, changeActivity;
-    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,10 @@ public class MainActivity extends ActionBarActivity {
             cursor.moveToFirst();
 
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imagePath));
             bitmap = BitmapFactory.decodeFile(imagePath);
             cursor.close();
+
+            bitmap = scaleDownBitmap(bitmap,100, this);
             changeActivity.putExtra("image", bitmap);
             startActivity(changeActivity);
         }
@@ -99,5 +100,37 @@ public class MainActivity extends ActionBarActivity {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    // makes bitmap smaller so gallery images can be imported
+    public static Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
+
+        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+        int h= (int) (newHeight*densityMultiplier);
+        int w= (int) (h * photo.getWidth()/((double) photo.getHeight()));
+
+        photo=Bitmap.createScaledBitmap(photo, w, h, true);
+
+        return photo;
+    }
+
+    //Creates a unique file name for each picture
+    String mCurrentPhotoPath;
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 }
