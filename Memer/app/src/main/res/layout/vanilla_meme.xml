@@ -28,7 +28,19 @@
                 android:id="@+id/change_img"
                 android:layout_weight="1"
                 android:text="Change Image"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <Button
+                android:id="@+id/save"
+                android:layout_weight="1"
+                android:text="Save"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <Button
+                android:id="@+id/share"
+                android:layout_weight="1"
+                android:text="Share"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
 
