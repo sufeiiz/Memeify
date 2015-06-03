@@ -14,8 +14,8 @@
             android:layout_weight="2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:textOn="Vanilla Meme"
-            android:textOff="Demotivational Poster"
+            android:textOn="Demotivational Poster"
+            android:textOff="Vanilla Meme"
             android:layout_gravity="center"
             android:typeface="serif"/>
 

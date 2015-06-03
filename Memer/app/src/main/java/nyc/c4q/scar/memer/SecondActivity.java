@@ -10,7 +10,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,17 +32,16 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.vanilla_meme);
 
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
         Button changeImage = (Button) findViewById(R.id.change_img);
+        Switch toggle = (Switch) findViewById(R.id.switch1);
 
         if (savedInstanceState != null) {
             uri = (Uri) savedInstanceState.get("luckyM");
             imageView.setImageURI(uri);
-
         } else {
-
             uri = (Uri) getIntent().getExtras().get("luckyM");
             imageView.setImageURI(uri);
         }
@@ -49,6 +50,16 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showListViewDialog();
+            }
+        });
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    setContentView(R.layout.demotivational_poster);
+                } else {
+                    setContentView(R.layout.vanilla_meme);
+                }
             }
         });
     }
