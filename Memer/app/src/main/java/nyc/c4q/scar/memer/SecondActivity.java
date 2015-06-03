@@ -28,11 +28,20 @@ public class SecondActivity extends AppCompatActivity {
     private Intent intent;
     private ImageView imageView;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
+    private boolean isVanilla = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vanilla_meme);
+        if (savedInstanceState != null) {
+            isVanilla = (boolean) savedInstanceState.get("isVanilla");
+        }
+
+        if (isVanilla) {
+            setContentView(R.layout.vanilla_meme);
+        } else {
+            setContentView(R.layout.demotivational_poster);
+        }
 
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
         Button changeImage = (Button) findViewById(R.id.change_img);
@@ -55,11 +64,8 @@ public class SecondActivity extends AppCompatActivity {
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setContentView(R.layout.demotivational_poster);
-                } else {
-                    setContentView(R.layout.vanilla_meme);
-                }
+                isVanilla = !isChecked;
+                recreate();
             }
         });
     }
@@ -122,6 +128,7 @@ public class SecondActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle toSave) {
         super.onSaveInstanceState(toSave);
         toSave.putParcelable("luckyM", uri);
+        toSave.putBoolean("isVanilla", isVanilla);
     }
 
     private File createImageFile() throws IOException {

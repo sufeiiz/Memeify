@@ -7,6 +7,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:gravity="center"
+    android:id="@+id/demotivational"
     tools:context="nyc.c4q.scar.memer.demotivational_poster">
 
     <LinearLayout
@@ -20,8 +21,21 @@
             android:layout_height="wrap_content"
             android:textOn="Demotivational Poster"
             android:textOff="Vanilla Meme"
+            android:checked="true"
             android:layout_gravity="center"
             android:typeface="serif"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/change_img"
+                android:layout_weight="1"
+                android:text="Change Image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
