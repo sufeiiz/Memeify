@@ -6,13 +6,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ViewSwitcher;
+
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextToSpeech t1;
     private Intent intent;
     private Uri imageFileUri;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
@@ -23,9 +30,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton camera = (ImageButton) findViewById(R.id.camera);
+
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.UK);
+                }
+            }
+        });
+
+
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                t1.speak("Memer", TextToSpeech.QUEUE_FLUSH, null);
                 showListViewDialog();
             }
         });
@@ -38,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
+
+
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
@@ -47,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent changeActivity = new Intent(MainActivity.this, SecondActivity.class);
         changeActivity.putExtra("luckyM", imageFileUri);
-        startActivity(changeActivity);
+        if (imageFileUri != null) {
+            startActivity(changeActivity);
+        }
     }
 
     //This is for the dialog box: Camera or Gallery

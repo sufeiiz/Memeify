@@ -3,6 +3,9 @@ package nyc.c4q.scar.memer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,10 +13,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
+import android.widget.ViewSwitcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,50 +27,98 @@ import java.util.Date;
  */
 public class SecondActivity extends AppCompatActivity {
 
+
+    private ViewSwitcher viewSwitcher;
     private Uri uri;
     private Intent intent;
     private ImageView imageView;
+    private ImageView imageView2;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+
+
+
+        //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
             isVanilla = (boolean) savedInstanceState.get("isVanilla");
         }
 
+        //This sets the layout according to which layout mode is selected
         if (isVanilla) {
-            setContentView(R.layout.vanilla_meme);
-        } else {
-            setContentView(R.layout.demotivational_poster);
+            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
+            nyc.c4q.scar.memer.AutoResizeEditText resizeTop = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.top);
+            nyc.c4q.scar.memer.AutoResizeEditText resizeBottom = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.bottom);
+            resizeTop.setTypeface(impact);
+            resizeBottom.setTypeface(impact);
         }
 
-        imageView = (ImageView) findViewById(R.id.insert_pic_id);
-        Button changeImage = (Button) findViewById(R.id.change_img);
-        Switch toggle = (Switch) findViewById(R.id.switch1);
 
+        viewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher);
+
+        imageView = (ImageView) findViewById(R.id.insert_pic_id);
+        imageView2 = (ImageView) findViewById(R.id.insert_pic_id2);
+        ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
+        ImageButton shareImage = (ImageButton) findViewById(R.id.share);
+
+
+        shareImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+                //File file = createImageFile();
+
+            }
+
+
+        });
+
+
+
+        Button switcherButton = (Button) findViewById(R.id.switcherButton);
+        switcherButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewSwitcher.showNext();
+                isVanilla = !isVanilla;
+            }
+        });
+
+
+
+
+
+
+        //This loads up any existing savedInstanceStates
         if (savedInstanceState != null) {
             uri = (Uri) savedInstanceState.get("luckyM");
             imageView.setImageURI(uri);
+            imageView2.setImageURI(uri);
         } else {
             uri = (Uri) getIntent().getExtras().get("luckyM");
             imageView.setImageURI(uri);
+            imageView2.setImageURI(uri);
         }
 
+        //This loads up dialog
         changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListViewDialog();
             }
         });
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isVanilla = !isChecked;
-                recreate();
-            }
-        });
+//
+
     }
 
 
@@ -130,6 +180,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onSaveInstanceState(toSave);
         toSave.putParcelable("luckyM", uri);
         toSave.putBoolean("isVanilla", isVanilla);
+        //TODO: save viewswitcher??
     }
 
     private File createImageFile() throws IOException {
@@ -149,5 +200,25 @@ public class SecondActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
+    }
+
+    public int getImageSize(Uri uri) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(getAbsolutePath(uri), o);
+        int width = o.outWidth;
+        return width;
+    }
+
+    public String getAbsolutePath(Uri uri) {
+        String[] projection = { MediaStore.MediaColumns.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
     }
 }

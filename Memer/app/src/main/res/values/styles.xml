@@ -3,11 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
 
     <style name="CamButtons">
         <item name="android:background">#C1E6FF</item>
-        <item name="android:layout_margin">2dp</item>
+        <item name="android:textColor">#232447</item>
     </style>
 
 </resources>
