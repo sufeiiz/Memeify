@@ -3,17 +3,27 @@ package nyc.c4q.scar.memer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,12 +50,18 @@ public class SecondActivity extends AppCompatActivity {
 
         if (isVanilla) {
             setContentView(R.layout.vanilla_meme);
+
+            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
+            nyc.c4q.scar.memer.AutoResizeEditText resizeTop = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.top);
+            nyc.c4q.scar.memer.AutoResizeEditText resizeBottom = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.bottom);
+            resizeTop.setTypeface(impact);
+            resizeBottom.setTypeface(impact);
         } else {
             setContentView(R.layout.demotivational_poster);
         }
 
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
-        Button changeImage = (Button) findViewById(R.id.change_img);
+        ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         Switch toggle = (Switch) findViewById(R.id.switch1);
 
         if (savedInstanceState != null) {
@@ -149,5 +165,25 @@ public class SecondActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
+    }
+
+    public int getImageSize(Uri uri) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(getAbsolutePath(uri), o);
+        int width = o.outWidth;
+        return width;
+    }
+
+    public String getAbsolutePath(Uri uri) {
+        String[] projection = { MediaStore.MediaColumns.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
     }
 }
