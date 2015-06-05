@@ -1,15 +1,24 @@
-# Memeify
+# Memer
 
-### TEAM SCAR
-Sufei, Charlyn, Alvin, Reinard
+### TEAM SCAR         
+SUFEI (Team Lead) --
+
+CHARLYN --  
+
+ALVIN --                ~10 hrs
+  - Worked mostly on creating the functional layout for "demotivational poster" and editing the layout/UI to fit; implementing the viewswitcher to shift between the two meme layouts; helped with code to save meme to gallery.
+
+REINARD --
+
+
+
 
 
 ### Tasks
-* portrait orientation
-* Handle vanilla meme format (toggle button)
-* Handle demotivational poster format (toggle button)
+* Handle vanilla meme format (toggle button?)
+* Handle demotivational poster format (toggle button?)
 * Intent for camera -> user take/retake -> jump back to app
-* Intent for camera roll -> jumo back to app
+* Intent for camera roll -> jump back to app
 * save meme to camera roll
 * share meme on social media (implicit intent - android does it)
 * layout/style sheet
