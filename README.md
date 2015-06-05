@@ -1,4 +1,4 @@
-# Memeify
+# Memer
 
 ### TEAM SCAR
 Sufei, Charlyn, Alvin, Reinard
