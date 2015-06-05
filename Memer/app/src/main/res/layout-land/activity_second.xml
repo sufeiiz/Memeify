@@ -46,18 +46,15 @@
             android:text="SWITCH LAYOUT"
             android:textColor="#FFF"
             android:textSize="30px" />
-
     </LinearLayout>
-
 
     <ViewSwitcher
         android:id="@+id/viewswitcher"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="8"
+        android:layout_weight="7"
         android:inAnimation="@android:anim/slide_in_left"
         android:outAnimation="@android:anim/slide_out_right">
-
 
         <ScrollView
             android:layout_width="match_parent"
@@ -68,50 +65,49 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
                 <ImageView
                     android:id="@+id/insert_pic_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/logo" />
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY" />
 
-                <nyc.c4q.scar.memer.AutoResizeEditText
+                <EditText
                     android:id="@+id/top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
-                    android:focusableInTouchMode="true"
                     android:gravity="center_vertical|center_horizontal"
                     android:hint="Enter Text"
-                    android:inputType="textMultiLine|textCapCharacters|textCapCharacters"
+                    android:inputType="textMultiLine|textNoSuggestions|textCapCharacters"
                     android:isScrollContainer="false"
-                    android:maxLength="72"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#FFF"
-                    android:textSize="60sp" />
+                    android:maxLines="2"
+                    android:maxLength="46"
+                    android:textColor="#FFF"
+                    android:textColorHint="#FFF"/>
 
-                <nyc.c4q.scar.memer.AutoResizeEditText
+                <EditText
                     android:id="@+id/bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
-                    android:focusableInTouchMode="true"
                     android:gravity="center_vertical|center_horizontal"
                     android:hint="Enter Text"
                     android:inputType="textMultiLine|textNoSuggestions|textCapCharacters"
                     android:isScrollContainer="false"
-                    android:maxLength="72"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#FFF"
-                    android:textSize="60sp" />
+                    android:maxLines="2"
+                    android:maxLength="46"
+                    android:textColor="#FFF"
+                    android:textColorHint="#FFF"/>
             </RelativeLayout>
 
         </ScrollView>
@@ -133,10 +129,14 @@
                     android:id="@+id/insert_pic_id2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/demo_pic" />
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/demo_pic"
+                    android:scaleType="fitXY" />
 
                 <EditText
-                    android:id="@+id/bigtext"
+                    android:id="@id/top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -144,7 +144,6 @@
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:gravity="center_horizontal"
                     android:hint="ENTER TEXT"
                     android:inputType="textCapCharacters|textMultiLine|textNoSuggestions"
@@ -152,11 +151,10 @@
                     android:maxLength="50"
                     android:textColor="#FFF"
                     android:textColorHint="#FFF"
-                    android:textSize="70px"
-                    android:typeface="serif" />
+                    android:textSize="70px" />
 
                 <EditText
-                    android:id="@+id/smalltext"
+                    android:id="@id/bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -164,7 +162,6 @@
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:gravity="center_horizontal"
                     android:hint="ENTER TEXT"
                     android:inputType="textMultiLine|textNoSuggestions|textCapSentences"

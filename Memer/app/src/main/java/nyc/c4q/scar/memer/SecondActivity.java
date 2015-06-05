@@ -10,14 +10,12 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.Preference;
 import android.provider.MediaStore;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +31,6 @@ import java.util.Date;
  */
 public class SecondActivity extends AppCompatActivity {
 
-
     private ViewSwitcher viewSwitcher;
     private Uri uri;
     private Intent intent;
@@ -41,54 +38,44 @@ public class SecondActivity extends AppCompatActivity {
     private ImageView imageView2;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
-    private Parcelable viewParcelable;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-
-
-
         //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
             isVanilla = (boolean) savedInstanceState.get("isVanilla");
         }
 
-        //This sets the layout according to which layout mode is selected
-        if (isVanilla) {
-            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
-            nyc.c4q.scar.memer.AutoResizeEditText resizeTop = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.top);
-            nyc.c4q.scar.memer.AutoResizeEditText resizeBottom = (nyc.c4q.scar.memer.AutoResizeEditText) findViewById(R.id.bottom);
-            resizeTop.setTypeface(impact);
-            resizeBottom.setTypeface(impact);
-        }
-
-
         viewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher);
-
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
         imageView2 = (ImageView) findViewById(R.id.insert_pic_id2);
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
+        EditText top = (EditText) findViewById(R.id.top);
+        EditText bottom = (EditText) findViewById(R.id.bottom);
 
+        //This loads up dialog
+        changeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListViewDialog();
+            }
+        });
 
         shareImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 shareIntent.setType("image/jpeg");
                 startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
                 //File file = createImageFile();
-
             }
-
-
         });
 
         saveImage.setOnClickListener(new View.OnClickListener() {
@@ -122,18 +109,19 @@ public class SecondActivity extends AppCompatActivity {
             imageView2.setImageURI(uri);
         }
 
-        //This loads up dialog
-        changeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListViewDialog();
-            }
-        });
+        //This sets the layout according to which layout mode is selected
+        if (isVanilla) {
+            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
+            top.setTypeface(impact);
+            bottom.setTypeface(impact);
 
-
-
+            top.setTextSize(getImageSize(uri) / 40);
+            bottom.setTextSize(getImageSize(uri) / 40);
+        } else {
+            top.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+            bottom.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+        }
     }
-
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
@@ -154,7 +142,6 @@ public class SecondActivity extends AppCompatActivity {
         }
     }
 
-
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -169,8 +156,6 @@ public class SecondActivity extends AppCompatActivity {
 
                     Uri imageFileUri = Uri.parse(stringVariable);
                     intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
-
-
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivityForResult(intent, 0);
 
@@ -193,15 +178,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onSaveInstanceState(toSave);
         toSave.putParcelable("luckyM", uri);
         toSave.putBoolean("isVanilla", isVanilla);
-        //TODO: save viewswitcher??
     }
-
-
-
-
-
-
-
 
     private File createImageFile() throws IOException {
         String mCurrentPhotoPath;
@@ -220,5 +197,28 @@ public class SecondActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
+    }
+
+
+
+
+    public int getImageSize(Uri uri) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(getAbsolutePath(uri), o);
+        return o.outHeight;
+    }
+
+
+    public String getAbsolutePath(Uri uri) {
+        String[] projection = { MediaStore.MediaColumns.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
     }
 }
