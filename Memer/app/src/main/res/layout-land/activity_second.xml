@@ -86,38 +86,38 @@
                     <nyc.c4q.scar.memer.AutoResizeEditText
                         android:id="@+id/top"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:adjustViewBounds="true"
                         android:background="@android:color/transparent"
-                        android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:gravity="center_vertical|center_horizontal"
                         android:hint="Enter Text"
                         android:inputType="textMultiLine|textCapCharacters|textCapCharacters"
                         android:isScrollContainer="false"
                         android:maxLength="72"
+                        android:textColorHint="#FFF"
                         android:textColor="#ffffff"
                         android:textSize="60sp"/>
 
                     <nyc.c4q.scar.memer.AutoResizeEditText
                         android:id="@+id/bottom"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentStart="true"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:background="@android:color/transparent"
-                        android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:gravity="center_vertical|center_horizontal"
                         android:hint="Enter Text"
                         android:inputType="textMultiLine|textNoSuggestions|textCapCharacters"
                         android:isScrollContainer="false"
                         android:maxLength="72"
+                        android:textColorHint="#FFF"
                         android:textColor="#ffffff"
                         android:textSize="60sp"/>
                 </RelativeLayout>
@@ -162,7 +162,7 @@
                     android:textColorHint="#FFF"
                     android:textSize="70px"
                     android:typeface="serif"
-                    />
+                    android:background="@null" />
 
                 <EditText
                     android:id="@+id/smalltext"
@@ -180,7 +180,8 @@
                     android:maxLength="80"
                     android:textColor="#FFF"
                     android:textColorHint="#FFF"
-                    android:textSize="30px" />
+                    android:textSize="30px"
+                    android:background="@null"/>
 
 
             </LinearLayout>
