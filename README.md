@@ -1,7 +1,7 @@
 # Memer
 
 ### TEAM SCAR         
-SUFEI (Team Lead) --
+SUFEI --
 
 CHARLYN --  
 
