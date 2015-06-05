@@ -10,7 +10,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -55,8 +54,8 @@ public class SecondActivity extends AppCompatActivity {
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
-        EditText top = (EditText) findViewById(R.id.top);
-        EditText bottom = (EditText) findViewById(R.id.bottom);
+        final EditText top = (EditText) findViewById(R.id.top);
+        final EditText bottom = (EditText) findViewById(R.id.bottom);
 
         //This loads up dialog
         changeImage.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +80,12 @@ public class SecondActivity extends AppCompatActivity {
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (top.getText().toString().matches("")) {
+                    top.setVisibility(View.GONE);
+                }
+                if (bottom.getText().toString().matches("")) {
+                    bottom.setVisibility(View.GONE);
+                }
                 View v1 = viewSwitcher.getCurrentView();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
@@ -180,35 +185,13 @@ public class SecondActivity extends AppCompatActivity {
         toSave.putBoolean("isVanilla", isVanilla);
     }
 
-    private File createImageFile() throws IOException {
-        String mCurrentPhotoPath;
-
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
-
-
-
-
+    // gets image height to adjust edittext accordingly
     public int getImageSize(Uri uri) {
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(getAbsolutePath(uri), o);
         return o.outHeight;
     }
-
 
     public String getAbsolutePath(Uri uri) {
         String[] projection = { MediaStore.MediaColumns.DATA };

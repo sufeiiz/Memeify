@@ -10,9 +10,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ViewSwitcher;
 import java.util.Locale;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,15 +26,15 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton camera = (ImageButton) findViewById(R.id.camera);
 
+        // Saves "memer" sound to be played when camera button is pressed
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.UK);
+                    t1.setLanguage(Locale.US);
                 }
             }
         });
-
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,13 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
-
-
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
-
         }
 
         Intent changeActivity = new Intent(MainActivity.this, SecondActivity.class);
@@ -97,5 +92,4 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
     }
-
 }
