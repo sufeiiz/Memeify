@@ -4,17 +4,23 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.preference.Preference;
 import android.provider.MediaStore;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import java.io.File;
@@ -35,6 +41,7 @@ public class SecondActivity extends AppCompatActivity {
     private ImageView imageView2;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
+    private Parcelable viewParcelable;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -65,6 +72,7 @@ public class SecondActivity extends AppCompatActivity {
         imageView2 = (ImageView) findViewById(R.id.insert_pic_id2);
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
+        ImageButton saveImage = (ImageButton) findViewById(R.id.save);
 
 
         shareImage.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +91,16 @@ public class SecondActivity extends AppCompatActivity {
 
         });
 
-
+        saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View v1 = viewSwitcher.getCurrentView();
+                v1.setDrawingCacheEnabled(true);
+                Bitmap bm = v1.getDrawingCache();
+                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" , null);
+                Toast.makeText(getApplicationContext(), "Image has been saved", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Button switcherButton = (Button) findViewById(R.id.switcherButton);
         switcherButton.setOnClickListener(new View.OnClickListener() {
@@ -93,11 +110,6 @@ public class SecondActivity extends AppCompatActivity {
                 isVanilla = !isVanilla;
             }
         });
-
-
-
-
-
 
         //This loads up any existing savedInstanceStates
         if (savedInstanceState != null) {
@@ -117,7 +129,8 @@ public class SecondActivity extends AppCompatActivity {
                 showListViewDialog();
             }
         });
-//
+
+
 
     }
 
@@ -183,6 +196,13 @@ public class SecondActivity extends AppCompatActivity {
         //TODO: save viewswitcher??
     }
 
+
+
+
+
+
+
+
     private File createImageFile() throws IOException {
         String mCurrentPhotoPath;
 
@@ -200,25 +220,5 @@ public class SecondActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
-    }
-
-    public int getImageSize(Uri uri) {
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(getAbsolutePath(uri), o);
-        int width = o.outWidth;
-        return width;
-    }
-
-    public String getAbsolutePath(Uri uri) {
-        String[] projection = { MediaStore.MediaColumns.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
-            return null;
     }
 }

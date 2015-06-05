@@ -69,13 +69,13 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
 
@@ -142,7 +142,7 @@
 
                 <ImageView
                     android:id="@+id/insert_pic_id2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="600px"
                     android:layout_height="wrap_content"
                     android:background="@drawable/demo_pic" />
 
