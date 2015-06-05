@@ -1,11 +1,11 @@
 # Memer
 
-### TEAM SCAR          Hours:
+### TEAM SCAR         
 SUFEI (Team Lead) --
 
 CHARLYN --  
 
-ALVIN --                ~10
+ALVIN --                ~10 hrs
   - Worked mostly on creating the functional layout for "demotivational poster" and editing the layout/UI to fit; implementing the viewswitcher to shift between the two meme layouts; helped with code to save meme to gallery.
 
 REINARD --
