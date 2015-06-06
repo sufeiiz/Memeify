@@ -11,7 +11,7 @@ ALVIN -- [~10 hours]
   - I worked mostly on creating the functional layout for "demotivational poster" and editing the layouts/UI to fit different resolutions and orientations. Additionally, I implemented the 'viewswitcher' to shift between our two meme layouts and helped with creating the code to save meme to gallery.
 
 REINARD -- [~10 hours]
-  - Created a OnClickListener for a Button that generates a dialog box for the user to choose from the camera or gallery. Created a temporary storage space the ImageView. Created a way on how to transferred data from one Activity to another. Added a saveInstances method for any variable necessary. ~10 hrs.
+  - Created a OnClickListener for a Button that generates a dialog box for the user to choose from the camera or gallery. Created a temporary storage space the ImageView. Created a way on how to transferred data from one Activity to another. Added a saveInstances method for any variable necessary. 
 
 ### Tasks
 * Handle vanilla meme format (toggle button?)
