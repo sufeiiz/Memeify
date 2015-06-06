@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by sufeizhao on 5/31/15.
  */
@@ -32,6 +35,7 @@ public class SecondActivity extends AppCompatActivity {
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
     private float fontSize;
+    private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -72,6 +76,17 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+//        shareImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent shareIntent = new Intent();
+//                shareIntent.setAction(Intent.ACTION_SEND);
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, MediaStore.Images.Media.getContentUri("image" + timeStamp + ".jpg"));
+//                shareIntent.setType("image/jpeg");
+//                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+//            }
+//        });
+
         // Hides editText is nothing has been entered, brings it back after image has been saved
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,11 +97,12 @@ public class SecondActivity extends AppCompatActivity {
                 if (bottom.getText().toString().matches("")) {
                     bottom.setVisibility(View.GONE);
                 }
+
                 View v1 = viewSwitcher.getCurrentView();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
-                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" , null);
-                Toast.makeText(getApplicationContext(), "Image has been saved", Toast.LENGTH_SHORT).show();
+                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg" , timeStamp.toString());
+                Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
                 top.setVisibility(View.VISIBLE);
                 bottom.setVisibility(View.VISIBLE);
