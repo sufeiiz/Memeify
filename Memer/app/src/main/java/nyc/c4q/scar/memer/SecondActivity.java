@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import java.io.Serializable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,6 +30,7 @@ import java.util.Date;
  * Created by sufeizhao on 5/31/15.
  */
 public class SecondActivity extends AppCompatActivity implements Serializable {
+
 
     private ViewSwitcher viewSwitcher;
     private Uri uri;
@@ -43,11 +45,13 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     public final String IMAGE_FILE = "image_file";
     public static Bitmap bm;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
         preferences = this.getSharedPreferences(IMAGE_FILE, Context.MODE_PRIVATE);
+
 
         //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
@@ -62,6 +66,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
         final EditText top = (EditText) findViewById(R.id.top);
         final EditText bottom = (EditText) findViewById(R.id.bottom);
+
         //This loads up dialog
         changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +80,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
                 Intent shareIntent = new Intent();
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("image_file", MODE_PRIVATE );
+                editor.putInt("image_file", MODE_PRIVATE);
                 editor.commit();
 
                 SharedPreferences prefs = getSharedPreferences("image_file", MODE_PRIVATE);
@@ -84,6 +89,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                 shareIntent.setType("image/jpeg");
 //                startActivity(Intent.createChoosershareIntent, getResources().getText(R.string.app_name));
                 startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+
 
             }
         });
@@ -103,16 +109,18 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (top.getText().toString().matches("")) {
-//                    top.setVisibility(View.GONE);
-//                }
-//                if (bottom.getText().toString().matches("")) {
-//                    bottom.setVisibility(View.GONE);
-//                }
+
+                if (top.getText().toString().matches("")) {
+                    top.setVisibility(View.GONE);
+                }
+                if (bottom.getText().toString().matches("")) {
+                    bottom.setVisibility(View.GONE);
+                }
 
                 View v1 = viewSwitcher.getCurrentView();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
+
                 MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
                 Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
@@ -138,7 +146,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         }
         imageView.setImageURI(uri);
         imageView2.setImageURI(uri);
-//        fontSize = getImageSize(uri) ;
+
 
         //This sets the layout according to which layout mode is selected
         if (isVanilla) {
@@ -153,6 +161,9 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         }
     }
 
+
+
+
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -162,7 +173,8 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             uri = data.getData();
             imageView.setImageURI(uri);
             imageView2.setImageURI(uri);
-//            fontSize = getImageSize(uri) / 40;
+
+            fontSize = getImageSize(uri) / 40;
 
         }
 
@@ -170,7 +182,10 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             uri = Uri.parse("file:///sdcard/picture.jpg");
             imageView.setImageURI(Uri.parse(stringVariable));
             imageView2.setImageURI(Uri.parse(stringVariable));
-//            fontSize = getImageSize(Uri.parse(stringVariable)) / 40;
+
+            imageView2.setImageURI(null);
+            imageView2.setImageURI(Uri.parse(stringVariable));
+            fontSize = getImageSize(uri) / 40;
         }
     }
 
