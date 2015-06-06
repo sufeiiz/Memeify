@@ -47,6 +47,7 @@ public class SecondActivity extends AppCompatActivity {
         //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
             isVanilla = (boolean) savedInstanceState.get("isVanilla");
+
         }
 
         //This sets the layout according to which layout mode is selected
