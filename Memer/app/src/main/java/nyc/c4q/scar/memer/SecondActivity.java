@@ -1,8 +1,10 @@
 package nyc.c4q.scar.memer;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,13 +21,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.io.Serializable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by sufeizhao on 5/31/15.
  */
-public class SecondActivity extends AppCompatActivity {
+public class SecondActivity extends AppCompatActivity implements Serializable {
+
 
     private ViewSwitcher viewSwitcher;
     private Uri uri;
@@ -36,11 +41,17 @@ public class SecondActivity extends AppCompatActivity {
     private boolean isVanilla = true;
     private float fontSize;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    private SharedPreferences preferences = null;
+    public final String IMAGE_FILE = "image_file";
+    public static Bitmap bm;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+        preferences = this.getSharedPreferences(IMAGE_FILE, Context.MODE_PRIVATE);
+
 
         //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
@@ -68,11 +79,18 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent shareIntent = new Intent();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("image_file", MODE_PRIVATE);
+                editor.commit();
+
+                SharedPreferences prefs = getSharedPreferences("image_file", MODE_PRIVATE);
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 shareIntent.setType("image/jpeg");
+//                startActivity(Intent.createChoosershareIntent, getResources().getText(R.string.app_name));
                 startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
-                //File file = createImageFile();
+
+
             }
         });
 
@@ -91,6 +109,7 @@ public class SecondActivity extends AppCompatActivity {
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (top.getText().toString().matches("")) {
                     top.setVisibility(View.GONE);
                 }
@@ -101,7 +120,8 @@ public class SecondActivity extends AppCompatActivity {
                 View v1 = viewSwitcher.getCurrentView();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
-                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg" , timeStamp.toString());
+
+                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
                 Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
                 top.setVisibility(View.VISIBLE);
@@ -126,7 +146,7 @@ public class SecondActivity extends AppCompatActivity {
         }
         imageView.setImageURI(uri);
         imageView2.setImageURI(uri);
-        fontSize = getImageSize(uri) / 40;
+
 
         //This sets the layout according to which layout mode is selected
         if (isVanilla) {
@@ -134,13 +154,15 @@ public class SecondActivity extends AppCompatActivity {
             top.setTypeface(impact);
             bottom.setTypeface(impact);
 
-            top.setTextSize(fontSize);
-            bottom.setTextSize(fontSize);
+
         } else {
             top.setTypeface(Typeface.create("serif", Typeface.NORMAL));
             bottom.setTypeface(Typeface.create("serif", Typeface.NORMAL));
         }
     }
+
+
+
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
@@ -151,14 +173,16 @@ public class SecondActivity extends AppCompatActivity {
             uri = data.getData();
             imageView.setImageURI(uri);
             imageView2.setImageURI(uri);
+
             fontSize = getImageSize(uri) / 40;
 
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             uri = Uri.parse("file:///sdcard/picture.jpg");
-            imageView.setImageURI(null);
             imageView.setImageURI(Uri.parse(stringVariable));
+            imageView2.setImageURI(Uri.parse(stringVariable));
+
             imageView2.setImageURI(null);
             imageView2.setImageURI(Uri.parse(stringVariable));
             fontSize = getImageSize(uri) / 40;
@@ -222,4 +246,5 @@ public class SecondActivity extends AppCompatActivity {
         } else
             return null;
     }
+
 }

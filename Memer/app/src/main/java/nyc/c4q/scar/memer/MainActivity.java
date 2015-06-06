@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                t1.speak("Memer", TextToSpeech.QUEUE_FLUSH, null);
+                t1.speak("Meemerr", TextToSpeech.QUEUE_FLUSH, null);
                 showListViewDialog();
             }
         });
