@@ -67,14 +67,11 @@
         android:outAnimation="@android:anim/slide_out_right">
 
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
 
@@ -130,12 +127,8 @@
                 </RelativeLayout>
 
 
-            </ScrollView>
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/demoMeme"
@@ -198,7 +191,6 @@
 
             </LinearLayout>
 
-        </ScrollView>
 
 
     </ViewSwitcher>
