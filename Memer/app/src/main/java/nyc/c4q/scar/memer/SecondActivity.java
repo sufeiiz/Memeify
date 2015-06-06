@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,11 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by sufeizhao on 5/31/15.
@@ -37,6 +31,7 @@ public class SecondActivity extends AppCompatActivity {
     private ImageView imageView2;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
+    private float fontSize;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -77,6 +72,7 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        // Hides editText is nothing has been entered, brings it back after image has been saved
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +87,9 @@ public class SecondActivity extends AppCompatActivity {
                 Bitmap bm = v1.getDrawingCache();
                 MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" , null);
                 Toast.makeText(getApplicationContext(), "Image has been saved", Toast.LENGTH_SHORT).show();
+
+                top.setVisibility(View.VISIBLE);
+                bottom.setVisibility(View.VISIBLE);
             }
         });
 
@@ -106,13 +105,12 @@ public class SecondActivity extends AppCompatActivity {
         //This loads up any existing savedInstanceStates
         if (savedInstanceState != null) {
             uri = (Uri) savedInstanceState.get("luckyM");
-            imageView.setImageURI(uri);
-            imageView2.setImageURI(uri);
         } else {
             uri = (Uri) getIntent().getExtras().get("luckyM");
-            imageView.setImageURI(uri);
-            imageView2.setImageURI(uri);
         }
+        imageView.setImageURI(uri);
+        imageView2.setImageURI(uri);
+        fontSize = getImageSize(uri) / 40;
 
         //This sets the layout according to which layout mode is selected
         if (isVanilla) {
@@ -120,8 +118,8 @@ public class SecondActivity extends AppCompatActivity {
             top.setTypeface(impact);
             bottom.setTypeface(impact);
 
-            top.setTextSize(getImageSize(uri) / 40);
-            bottom.setTextSize(getImageSize(uri) / 40);
+            top.setTextSize(fontSize);
+            bottom.setTextSize(fontSize);
         } else {
             top.setTypeface(Typeface.create("serif", Typeface.NORMAL));
             bottom.setTypeface(Typeface.create("serif", Typeface.NORMAL));
@@ -136,13 +134,15 @@ public class SecondActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             uri = data.getData();
             imageView.setImageURI(uri);
+            fontSize = getImageSize(uri) / 40;
+
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
-
             uri = Uri.parse("file:///sdcard/picture.jpg");
             imageView.setImageURI(null);
             imageView.setImageURI(Uri.parse(stringVariable));
+            fontSize = getImageSize(uri) / 40;
 
         }
     }
