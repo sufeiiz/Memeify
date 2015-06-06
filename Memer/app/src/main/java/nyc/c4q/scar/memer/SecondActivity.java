@@ -150,6 +150,7 @@ public class SecondActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             uri = data.getData();
             imageView.setImageURI(uri);
+            imageView2.setImageURI(uri);
             fontSize = getImageSize(uri) / 40;
 
         }
@@ -158,8 +159,9 @@ public class SecondActivity extends AppCompatActivity {
             uri = Uri.parse("file:///sdcard/picture.jpg");
             imageView.setImageURI(null);
             imageView.setImageURI(Uri.parse(stringVariable));
+            imageView2.setImageURI(null);
+            imageView2.setImageURI(Uri.parse(stringVariable));
             fontSize = getImageSize(uri) / 40;
-
         }
     }
 
