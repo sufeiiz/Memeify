@@ -9,7 +9,7 @@ CHARLYN --  Worked on chooser, save function and share function.~10hrs
 ALVIN --                ~10 hrs
   - Worked mostly on creating the functional layout for "demotivational poster" and editing the layout/UI to fit; implementing the viewswitcher to shift between the two meme layouts; helped with code to save meme to gallery.
 
-Reinard - Created a OnClickListener for a Button that generates a dialog box for the user to choose from: Camera or Gallery. Created a temporary storage space the ImageView. Transferred data from one Activity to another. Added a saveInstances method. ~10 hrs.
+Reinard - Created a OnClickListener for a Button that generates a dialog box for the user to choose from the camera or gallery. Created a temporary storage space the ImageView. Created a way on how to transferred data from one Activity to another. Added a saveInstances method for any variable necessary. ~10 hrs.
 
 ### Tasks
 * Handle vanilla meme format (toggle button?)
