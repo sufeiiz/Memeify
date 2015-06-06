@@ -1,7 +1,7 @@
 # Memer
 
 ### TEAM SCAR         
-SUFEI -- 13hours
+SUFEI (Team Lead) -- 13hours
  - Memer button images and logo were collected from SquareSpace logos. I made the layout for Mainactivity and Vanilla meme. Initially, I attempted to import code that can support auto adjusting the EditText font size when text is too long, but ran into the issue where deleting characters would not bring text size back to large. Instead, I used normal EditText but make the test size relative to image height. After Alvin and I combined our two layouts, we worked on aligning the image to fit the screen properly. I also made style sheets for buttons and edittexts.
 
 CHARLYN --  Worked on chooser, save function and share function.~10hrs
