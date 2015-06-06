@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -87,7 +88,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 shareIntent.setType("image/jpeg");
-//                startActivity(Intent.createChoosershareIntent, getResources().getText(R.string.app_name));
                 startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
 
 
@@ -117,10 +117,9 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     bottom.setVisibility(View.GONE);
                 }
 
-                View v1 = viewSwitcher.getCurrentView();
+                View v1 = viewSwitcher.getFocusedChild();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
-
                 MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
                 Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
@@ -155,9 +154,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             bottom.setTypeface(impact);
 
 
-        } else {
-            top.setTypeface(Typeface.create("serif", Typeface.NORMAL));
-            bottom.setTypeface(Typeface.create("serif", Typeface.NORMAL));
         }
     }
 
@@ -173,9 +169,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             uri = data.getData();
             imageView.setImageURI(uri);
             imageView2.setImageURI(uri);
-
-            fontSize = getImageSize(uri) / 40;
-
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
@@ -185,7 +178,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
 
             imageView2.setImageURI(null);
             imageView2.setImageURI(Uri.parse(stringVariable));
-            fontSize = getImageSize(uri) / 40;
         }
     }
 
