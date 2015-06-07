@@ -314,6 +314,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 1);
                 }
+                
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();
