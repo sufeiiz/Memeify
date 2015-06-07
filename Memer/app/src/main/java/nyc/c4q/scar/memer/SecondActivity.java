@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +35,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
 
 
     private ViewSwitcher viewSwitcher;
-    private Uri uri;
+    private Uri uri, uri2;
     private Intent intent;
     private ImageView imageView;
     private ImageView imageView2;
@@ -46,7 +47,8 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     private SharedPreferences preferences = null;
     public final String IMAGE_FILE = "image_file";
     public static Bitmap bm;
-    private EditText top, bottom;
+    private EditText top, bottom, big, small;
+    private String string1, string2;
 
 
     @Override
@@ -59,7 +61,10 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         //This loads up the last saved boolean for which layout mode was selected
         if (savedInstanceState != null) {
             isVanilla = (boolean) savedInstanceState.get("isVanilla");
+            uri = savedInstanceState.getParcelable("uri");
+            uri2 = savedInstanceState.getParcelable("uri2");
         }
+
 
         viewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher);
         imageView = (ImageView) findViewById(R.id.insert_pic_id);
@@ -67,10 +72,13 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
-        top  = (EditText) findViewById(R.id.top);
+        top = (EditText) findViewById(R.id.top);
         bottom = (EditText) findViewById(R.id.bottom);
+        big = (EditText) findViewById(R.id.bigtext);
+        small = (EditText) findViewById(R.id.smalltext);
         top.setMovementMethod(null);
         bottom.setMovementMethod(null);
+
 
         //This loads up dialog
         changeImage.setOnClickListener(new View.OnClickListener() {
@@ -83,45 +91,120 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         shareImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent shareIntent = new Intent();
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("image_file", MODE_PRIVATE);
-                editor.commit();
 
-                SharedPreferences prefs = getSharedPreferences("image_file", MODE_PRIVATE);
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+
+                top.setCursorVisible(false);
+                bottom.setCursorVisible(false);
+                View v1 = viewSwitcher.getFocusedChild();
+                v1.setDrawingCacheEnabled(true);
+
+                if (isVanilla) {
+                    if (top.getText().toString().matches("")) {
+                        top.setVisibility(View.GONE);
+                    }
+                    if (bottom.getText().toString().matches("")) {
+                        bottom.setVisibility(View.GONE);
+                    }
+
+                    Bitmap bm = v1.getDrawingCache();
+
+                    uri2 = getImageUri(getApplicationContext(), bm);
+
+
+                    Intent shareIntent = new Intent();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("image_file", MODE_PRIVATE);
+                    editor.commit();
+
+                    SharedPreferences prefs = getSharedPreferences("image_file", MODE_PRIVATE);
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri2);
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+
+                    top.setVisibility(View.VISIBLE);
+                    bottom.setVisibility(View.VISIBLE);
+                    top.setCursorVisible(true);
+                    bottom.setCursorVisible(true);
+                } else {
+                    if (big.getText().toString().matches("") || (small.getText().toString().matches(""))) {
+                        Toast.makeText(getApplicationContext(), "Please input meme text to continue", Toast.LENGTH_SHORT);
+                    } else {
+                        Bitmap bm = v1.getDrawingCache();
+
+                        uri2 = getImageUri(getApplicationContext(), bm);
+
+
+                        Intent shareIntent = new Intent();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("image_file", MODE_PRIVATE);
+                        editor.commit();
+
+                        SharedPreferences prefs = getSharedPreferences("image_file", MODE_PRIVATE);
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, uri2);
+                        shareIntent.setType("image/jpeg");
+                        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
+                    }
+                }
 
 
             }
         });
+
 
         // Hides editText is nothing has been entered, brings it back after image has been saved
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (top.getText().toString().matches("")) {
-                    top.setVisibility(View.GONE);
-                }
-                if (bottom.getText().toString().matches("")) {
-                    bottom.setVisibility(View.GONE);
+                if (isVanilla) {
+                    if (top.getText().toString().matches("")) {
+                        top.setVisibility(View.GONE);
+                    }
+                    if (bottom.getText().toString().matches("")) {
+                        bottom.setVisibility(View.GONE);
+                    }
+
+                    top.setCursorVisible(false);
+                    bottom.setCursorVisible(false);
+                    View v1 = viewSwitcher.getFocusedChild();
+                    v1.setDrawingCacheEnabled(true);
+
+                    Bitmap bm = v1.getDrawingCache();
+                    uri2 = getImageUri(getApplicationContext(), bm);
+
+                    MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
+                    Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
+
+                    top.setVisibility(View.VISIBLE);
+                    bottom.setVisibility(View.VISIBLE);
+                    top.setCursorVisible(true);
+                    bottom.setCursorVisible(true);
+
+                } else {
+                    if (big.getText().toString().matches("") || (small.getText().toString().matches(""))) {
+                        Toast.makeText(getApplicationContext(), "Please input meme text to continue", Toast.LENGTH_SHORT);
+                    } else {
+                        top.setCursorVisible(false);
+                        bottom.setCursorVisible(false);
+                        View v1 = viewSwitcher.getFocusedChild();
+                        v1.setDrawingCacheEnabled(true);
+
+                        Bitmap bm = v1.getDrawingCache();
+                        uri2 = getImageUri(getApplicationContext(), bm);
+
+                        MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
+                        Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
+
+                        top.setVisibility(View.VISIBLE);
+                        bottom.setVisibility(View.VISIBLE);
+                        top.setCursorVisible(true);
+                        bottom.setCursorVisible(true);
+                    }
                 }
 
-                top.setCursorVisible(false);
-                bottom.setCursorVisible(false);
-                View v1 = viewSwitcher.getFocusedChild();
-                v1.setDrawingCacheEnabled(true);
-                Bitmap bm = v1.getDrawingCache();
-                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
-                Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
-                top.setVisibility(View.VISIBLE);
-                bottom.setVisibility(View.VISIBLE);
-                top.setCursorVisible(true);
-                bottom.setCursorVisible(true);
             }
         });
 
@@ -130,7 +213,19 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 viewSwitcher.showNext();
-                isVanilla = !isVanilla;
+                if (isVanilla) {
+                    string1 = top.getText().toString();
+                    string2 = bottom.getText().toString();
+                    big.setText(string1);
+                    small.setText(string2);
+                    isVanilla = !isVanilla;
+                } else {
+                        string1 = big.getText().toString();
+                        string2 = small.getText().toString();
+                        top.setText(string1);
+                        bottom.setText(string2);
+                        isVanilla = true;
+                }
             }
         });
 
@@ -153,30 +248,40 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus){
-        int width=imageView.getWidth();
-        int height=imageView.getHeight();
+    public void onWindowFocusChanged(boolean hasFocus) {
+        int width = imageView.getWidth();
+        int height = imageView.getHeight();
 
         ViewGroup.LayoutParams topLP = top.getLayoutParams();
         ViewGroup.LayoutParams bottomLP = bottom.getLayoutParams();
+        Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
+        top.setTypeface(impact);
+        bottom.setTypeface(impact);
 
         if (width < 600) {
-            topLP.width = width-20;
-            bottomLP.width = width-20;
+            topLP.width = width - 20;
+            bottomLP.width = width - 20;
             top.setLayoutParams(topLP);
             bottom.setLayoutParams(bottomLP);
             fontsize = height / 20;
             top.setTextSize(fontsize);
             bottom.setTextSize(fontsize);
         } else {
-            topLP.width = width-10;
-            bottomLP.width = width-10;
+            topLP.width = width - 10;
+            bottomLP.width = width - 10;
             top.setLayoutParams(topLP);
             bottom.setLayoutParams(bottomLP);
             fontsize = height / 13;
             top.setTextSize(fontsize);
             bottom.setTextSize(fontsize);
         }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
@@ -232,27 +337,9 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     public void onSaveInstanceState(Bundle toSave) {
         super.onSaveInstanceState(toSave);
         toSave.putParcelable("luckyM", uri);
+        toSave.putParcelable("luckyM2", uri2);
         toSave.putBoolean("isVanilla", isVanilla);
     }
 
-    // gets image height to adjust edittext accordingly
-    public int getImageSize(Uri uri) {
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(getAbsolutePath(uri), o);
-        return o.outWidth;
-    }
-
-    public String getAbsolutePath(Uri uri) {
-        String[] projection = { MediaStore.MediaColumns.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
-            return null;
-    }
 
 }
