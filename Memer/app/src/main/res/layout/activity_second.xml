@@ -52,14 +52,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="RED" />
+                    android:text="RED"
+                    style="@style/CamButtons"/>
 
                 <Button
                     android:id="@+id/change_color_text_id2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="BLUE" />
+                    android:text="BLUE"
+                    style="@style/CamButtons"/>
+
+                <Button
+                    android:id="@+id/change_color_text_id3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="WHITE"
+                    style="@style/CamButtons"/>
             </LinearLayout>
         </LinearLayout>
 
