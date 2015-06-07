@@ -14,11 +14,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -40,11 +40,13 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     private ImageView imageView2;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
-    private float fontSize;
+    private int width;
+    private float fontsize;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     private SharedPreferences preferences = null;
     public final String IMAGE_FILE = "image_file";
     public static Bitmap bm;
+    private EditText top, bottom;
 
 
     @Override
@@ -65,8 +67,10 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
-        final EditText top = (EditText) findViewById(R.id.top);
-        final EditText bottom = (EditText) findViewById(R.id.bottom);
+        top  = (EditText) findViewById(R.id.top);
+        bottom = (EditText) findViewById(R.id.bottom);
+        top.setMovementMethod(null);
+        bottom.setMovementMethod(null);
 
         //This loads up dialog
         changeImage.setOnClickListener(new View.OnClickListener() {
@@ -94,17 +98,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             }
         });
 
-//        shareImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent shareIntent = new Intent();
-//                shareIntent.setAction(Intent.ACTION_SEND);
-//                shareIntent.putExtra(Intent.EXTRA_STREAM, MediaStore.Images.Media.getContentUri("image" + timeStamp + ".jpg"));
-//                shareIntent.setType("image/jpeg");
-//                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.app_name)));
-//            }
-//        });
-
         // Hides editText is nothing has been entered, brings it back after image has been saved
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +110,8 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     bottom.setVisibility(View.GONE);
                 }
 
+                top.setCursorVisible(false);
+                bottom.setCursorVisible(false);
                 View v1 = viewSwitcher.getFocusedChild();
                 v1.setDrawingCacheEnabled(true);
                 Bitmap bm = v1.getDrawingCache();
@@ -125,6 +120,8 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
 
                 top.setVisibility(View.VISIBLE);
                 bottom.setVisibility(View.VISIBLE);
+                top.setCursorVisible(true);
+                bottom.setCursorVisible(true);
             }
         });
 
@@ -152,13 +149,35 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
             Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
             top.setTypeface(impact);
             bottom.setTypeface(impact);
-
-
         }
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus){
+        int width=imageView.getWidth();
+        int height=imageView.getHeight();
 
+        ViewGroup.LayoutParams topLP = top.getLayoutParams();
+        ViewGroup.LayoutParams bottomLP = bottom.getLayoutParams();
 
+        if (width < 600) {
+            topLP.width = width-20;
+            bottomLP.width = width-20;
+            top.setLayoutParams(topLP);
+            bottom.setLayoutParams(bottomLP);
+            fontsize = height / 20;
+            top.setTextSize(fontsize);
+            bottom.setTextSize(fontsize);
+        } else {
+            topLP.width = width-10;
+            bottomLP.width = width-10;
+            top.setLayoutParams(topLP);
+            bottom.setLayoutParams(bottomLP);
+            fontsize = height / 13;
+            top.setTextSize(fontsize);
+            bottom.setTextSize(fontsize);
+        }
+    }
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
@@ -172,12 +191,9 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            uri = Uri.parse("file:///sdcard/picture.jpg");
-            imageView.setImageURI(Uri.parse(stringVariable));
-            imageView2.setImageURI(Uri.parse(stringVariable));
-
-            imageView2.setImageURI(null);
-            imageView2.setImageURI(Uri.parse(stringVariable));
+            uri = Uri.parse(stringVariable);
+            imageView.setImageURI(uri.normalizeScheme());
+            imageView2.setImageURI(uri.normalizeScheme());
         }
     }
 
@@ -224,7 +240,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(getAbsolutePath(uri), o);
-        return o.outHeight;
+        return o.outWidth;
     }
 
     public String getAbsolutePath(Uri uri) {
