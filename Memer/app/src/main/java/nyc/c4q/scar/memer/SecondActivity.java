@@ -168,12 +168,9 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
 
                     top.setCursorVisible(false);
                     bottom.setCursorVisible(false);
-                    View v1 = viewSwitcher.getFocusedChild();
+                    View v1 = viewSwitcher.getCurrentView();
                     v1.setDrawingCacheEnabled(true);
-
-                    Bitmap bm = v1.getDrawingCache();
-                    uri2 = getImageUri(getApplicationContext(), bm);
-
+                    bm = v1.getDrawingCache();
                     MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
                     Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
@@ -188,23 +185,14 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     } else {
                         top.setCursorVisible(false);
                         bottom.setCursorVisible(false);
-                        View v1 = viewSwitcher.getFocusedChild();
+                        View v1 = viewSwitcher.getCurrentView();
                         v1.setDrawingCacheEnabled(true);
-
-                        Bitmap bm = v1.getDrawingCache();
-                        uri2 = getImageUri(getApplicationContext(), bm);
-
+                        bm = v1.getDrawingCache();
                         MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
                         Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
 
-                        top.setVisibility(View.VISIBLE);
-                        bottom.setVisibility(View.VISIBLE);
-                        top.setCursorVisible(true);
-                        bottom.setCursorVisible(true);
                     }
                 }
-
-
             }
         });
 
@@ -258,7 +246,7 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         top.setTypeface(impact);
         bottom.setTypeface(impact);
 
-        if (width < 600) {
+        if (width < height) {
             topLP.width = width - 20;
             bottomLP.width = width - 20;
             top.setLayoutParams(topLP);
