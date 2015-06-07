@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.widget.ViewSwitcher;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,6 +32,8 @@ import java.util.Date;
 public class SecondActivity extends AppCompatActivity implements Serializable {
 
 
+    public static Bitmap bm;
+    public final String IMAGE_FILE = "image_file";
     private ViewSwitcher viewSwitcher;
     private Uri uri, uri2;
     private Intent intent;
@@ -45,10 +45,12 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
     private float fontsize;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     private SharedPreferences preferences = null;
-    public final String IMAGE_FILE = "image_file";
-    public static Bitmap bm;
     private EditText top, bottom, big, small;
     private String string1, string2;
+
+
+    //Quick added features
+    private Button colorChange, colorChange2;
 
 
     @Override
@@ -78,6 +80,132 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         small = (EditText) findViewById(R.id.smalltext);
         top.setMovementMethod(null);
         bottom.setMovementMethod(null);
+
+
+        //added this feature last minute.
+        colorChange = (Button) findViewById(R.id.change_color_text_id);
+
+        colorChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                big.setTextColor(Color.RED);
+                small.setTextColor(Color.RED);
+                top.setTextColor(Color.RED);
+                bottom.setTextColor(Color.RED);
+
+
+
+                if (isVanilla) {
+                    string1 = top.getText().toString();
+                    string2 = bottom.getText().toString();
+
+                    big.setTextColor(Color.RED);
+                    small.setTextColor(Color.RED);
+                    top.setTextColor(Color.RED);
+                    bottom.setTextColor(Color.RED);
+
+                    big.setText(string1);
+                    small.setText(string2);
+                    isVanilla = !isVanilla;
+                } else {
+                    string1 = big.getText().toString();
+                    string2 = small.getText().toString();
+
+                    big.setTextColor(Color.RED);
+                    small.setTextColor(Color.RED);
+                    top.setTextColor(Color.RED);
+                    bottom.setTextColor(Color.RED);
+
+                    top.setText(string1);
+                    bottom.setText(string2);
+                    isVanilla = true;
+                }
+
+
+
+            }
+        });
+
+        colorChange2 = (Button) findViewById(R.id.change_color_text_id2);
+
+        colorChange2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                big.setTextColor(Color.BLUE);
+                small.setTextColor(Color.BLUE);
+                top.setTextColor(Color.BLUE);
+                bottom.setTextColor(Color.BLUE);
+
+                if (isVanilla) {
+                    string1 = top.getText().toString();
+                    string2 = bottom.getText().toString();
+
+                    big.setTextColor(Color.BLUE);
+                    small.setTextColor(Color.BLUE);
+                    top.setTextColor(Color.BLUE);
+                    bottom.setTextColor(Color.BLUE);
+
+                    big.setText(string1);
+                    small.setText(string2);
+                    isVanilla = !isVanilla;
+                } else {
+                    string1 = big.getText().toString();
+                    string2 = small.getText().toString();
+
+                    big.setTextColor(Color.BLUE);
+                    small.setTextColor(Color.BLUE);
+                    top.setTextColor(Color.BLUE);
+                    bottom.setTextColor(Color.BLUE);
+
+                    top.setText(string1);
+                    bottom.setText(string2);
+                    isVanilla = true;
+                }
+
+            }
+        });
+
+        Button colorChange3 = (Button) findViewById(R.id.change_color_text_id3);
+
+        colorChange3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                big.setTextColor(Color.WHITE);
+                small.setTextColor(Color.WHITE);
+                top.setTextColor(Color.WHITE);
+                bottom.setTextColor(Color.WHITE);
+
+                if (isVanilla) {
+                    string1 = top.getText().toString();
+                    string2 = bottom.getText().toString();
+
+                    big.setTextColor(Color.WHITE);
+                    small.setTextColor(Color.WHITE);
+                    top.setTextColor(Color.WHITE);
+                    bottom.setTextColor(Color.WHITE);
+
+                    big.setText(string1);
+                    small.setText(string2);
+                    isVanilla = !isVanilla;
+                } else {
+                    string1 = big.getText().toString();
+                    string2 = small.getText().toString();
+
+                    big.setTextColor(Color.WHITE);
+                    small.setTextColor(Color.WHITE);
+                    top.setTextColor(Color.WHITE);
+                    bottom.setTextColor(Color.WHITE);
+
+                    top.setText(string1);
+                    bottom.setText(string2);
+                    isVanilla = true;
+                }
+
+            }
+        });
 
 
         //This loads up dialog
@@ -208,11 +336,11 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     small.setText(string2);
                     isVanilla = !isVanilla;
                 } else {
-                        string1 = big.getText().toString();
-                        string2 = small.getText().toString();
-                        top.setText(string1);
-                        bottom.setText(string2);
-                        isVanilla = true;
+                    string1 = big.getText().toString();
+                    string2 = small.getText().toString();
+                    top.setText(string1);
+                    bottom.setText(string2);
+                    isVanilla = true;
                 }
             }
         });
@@ -314,7 +442,6 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
                     intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 1);
                 }
-                
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();
@@ -329,6 +456,5 @@ public class SecondActivity extends AppCompatActivity implements Serializable {
         toSave.putParcelable("luckyM2", uri2);
         toSave.putBoolean("isVanilla", isVanilla);
     }
-
-
 }
+
