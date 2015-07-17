@@ -10,6 +10,8 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,23 +26,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ImageView logo = (ImageView) findViewById(R.id.logo);
         ImageButton camera = (ImageButton) findViewById(R.id.camera);
+        ImageButton topMeme = (ImageButton) findViewById(R.id.topMeme);
+        ImageButton template = (ImageButton) findViewById(R.id.template);
 
-        // Saves "memer" sound to be played when camera button is pressed
-        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        // Saves "memer" sound to be played when logo is pressed
+        t1 = new TextToSpeech(getApplicationContext(), new memerSound());
+        logo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.US);
-                }
+            public void onClick(View v) {
+                t1.speak("Meemerr", TextToSpeech.QUEUE_FLUSH, null);
             }
         });
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                t1.speak("Meemerr", TextToSpeech.QUEUE_FLUSH, null);
                 showListViewDialog();
+            }
+        });
+
+        topMeme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO add top meme
+            }
+        });
+
+        template.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO add template
             }
         });
     }
@@ -58,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             imageFileUri = Uri.parse(stringVariable);
         }
 
-        Intent changeActivity = new Intent(MainActivity.this, SecondActivity.class);
+        Intent changeActivity = new Intent(MainActivity.this, EditMemeActivity.class);
         changeActivity.putExtra("luckyM", imageFileUri);
         if (imageFileUri != null) {
             startActivity(changeActivity);
@@ -91,5 +108,14 @@ public class MainActivity extends AppCompatActivity {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    public class memerSound implements TextToSpeech.OnInitListener {
+        @Override
+        public void onInit(int status) {
+            if(status != TextToSpeech.ERROR) {
+                t1.setLanguage(Locale.US);
+            }
+        }
     }
 }

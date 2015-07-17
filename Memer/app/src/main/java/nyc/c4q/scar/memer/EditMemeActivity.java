@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * Created by sufeizhao on 5/31/15.
  */
-public class SecondActivity extends AppCompatActivity implements Serializable {
+public class EditMemeActivity extends AppCompatActivity implements Serializable {
 
 
     public static Bitmap bm;

@@ -1,28 +1,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:background="@drawable/background_repeat"
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_weight="4"
-        android:src="@drawable/logo2"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:src="@drawable/logo2" />
 
     <LinearLayout
-        android:layout_weight="1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
         <ImageButton
             android:id="@+id/camera"
+            style="@style/CamButtons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/camera"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            style="@style/CamButtons"/>
+            android:src="@drawable/choosenewimage" />
+
+        <ImageButton
+            android:id="@+id/topMeme"
+            style="@style/CamButtons"
+            android:layout_weight="1"
+            android:src="@drawable/viewtopmemes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <ImageButton
+            android:id="@+id/template"
+            style="@style/CamButtons"
+            android:src="@drawable/usetemplateimage"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
     </LinearLayout>
 </LinearLayout>
