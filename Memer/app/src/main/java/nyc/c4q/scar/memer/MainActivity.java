@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         topMeme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO add top meme
+                Intent intent = new Intent(MainActivity.this, TopMeme.class);
+                startActivity(intent);
             }
         });
 
@@ -75,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
             imageFileUri = Uri.parse(stringVariable);
         }
 
-        Intent changeActivity = new Intent(MainActivity.this, EditMemeActivity.class);
-        changeActivity.putExtra("luckyM", imageFileUri);
+        Intent changeActivity = new Intent(MainActivity.this, EditMeme.class);
+        changeActivity.putExtra("gallery_image", imageFileUri);
         if (imageFileUri != null) {
             startActivity(changeActivity);
         }
