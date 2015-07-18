@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,8 +21,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +38,6 @@ import java.util.Date;
  */
 public class EditMeme extends AppCompatActivity implements Serializable {
 
-    public static Bitmap bm;
     public final String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private ViewSwitcher viewSwitcher;
     private Uri uri;
@@ -39,7 +45,6 @@ public class EditMeme extends AppCompatActivity implements Serializable {
     private Intent intent;
     private ImageView imageView, imageView2;
     private boolean isVanilla = true;
-    private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     private EditText top, bottom, big, small;
 
     @Override
@@ -98,7 +103,7 @@ public class EditMeme extends AppCompatActivity implements Serializable {
             removeCursor();
             View v1 = viewSwitcher.getFocusedChild();
             v1.setDrawingCacheEnabled(true);
-            bm = v1.getDrawingCache();
+            Bitmap bm = v1.getDrawingCache();
             Uri uri2 = getImageUri(getApplicationContext(), bm);
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
@@ -115,8 +120,24 @@ public class EditMeme extends AppCompatActivity implements Serializable {
             removeCursor();
             View v1 = viewSwitcher.getCurrentView();
             v1.setDrawingCacheEnabled(true);
-            bm = v1.getDrawingCache();
-            MediaStore.Images.Media.insertImage(getContentResolver(), bm, "image" + timeStamp + ".jpg", timeStamp.toString());
+            Bitmap bm = v1.getDrawingCache();
+
+            File path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Memer");
+            if (!path.exists())
+                path.mkdirs();
+            File filepath = new File(path, "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg");
+
+            try {
+                FileOutputStream os = new FileOutputStream(filepath);
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                os.flush();
+                os.close();
+
+                MediaStore.Images.Media.insertImage(getContentResolver(), filepath.getAbsolutePath(), filepath.getName(), "Created by Memer");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             Toast.makeText(getApplicationContext(), "Image was saved", Toast.LENGTH_SHORT).show();
             showCursor();
         }
@@ -175,34 +196,41 @@ public class EditMeme extends AppCompatActivity implements Serializable {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        int width = imageView.getWidth();
-        int height = imageView.getHeight();
-
-        ViewGroup.LayoutParams topLP = top.getLayoutParams();
-        ViewGroup.LayoutParams bottomLP = bottom.getLayoutParams();
-        Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
-        top.setTypeface(impact);
-        bottom.setTypeface(impact);
-
-        float fontsize;
-        if (width < height) {
-            topLP.width = width - 20;
-            bottomLP.width = width - 20;
-            top.setLayoutParams(topLP);
-            bottom.setLayoutParams(bottomLP);
-            fontsize = height / 20;
-            top.setTextSize(fontsize);
-            bottom.setTextSize(fontsize);
-        } else {
-            topLP.width = width - 10;
-            bottomLP.width = width - 10;
-            top.setLayoutParams(topLP);
-            bottom.setLayoutParams(bottomLP);
-            fontsize = height / 13;
-            top.setTextSize(fontsize);
-            bottom.setTextSize(fontsize);
-        }
+        run.run();
     }
+
+    Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            int width = imageView.getWidth();
+            int height = imageView.getHeight();
+
+            ViewGroup.LayoutParams topLP = top.getLayoutParams();
+            ViewGroup.LayoutParams bottomLP = bottom.getLayoutParams();
+            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
+            top.setTypeface(impact);
+            bottom.setTypeface(impact);
+
+            float fontsize;
+            if (width < height) {
+                topLP.width = width - 20;
+                bottomLP.width = width - 20;
+                top.setLayoutParams(topLP);
+                bottom.setLayoutParams(bottomLP);
+                fontsize = height / 20;
+                top.setTextSize(fontsize);
+                bottom.setTextSize(fontsize);
+            } else {
+                topLP.width = width - 10;
+                bottomLP.width = width - 10;
+                top.setLayoutParams(topLP);
+                bottom.setLayoutParams(bottomLP);
+                fontsize = height / 13;
+                top.setTextSize(fontsize);
+                bottom.setTextSize(fontsize);
+            }
+        }
+    };
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

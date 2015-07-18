@@ -1,5 +1,6 @@
 package nyc.c4q.scar.memer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +15,7 @@ import android.widget.ImageView;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private TextToSpeech t1;
     private Intent intent;
