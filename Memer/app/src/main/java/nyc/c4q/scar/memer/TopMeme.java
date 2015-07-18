@@ -32,7 +32,7 @@ public class TopMeme extends Activity {
     private static final String ENDPOINT = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=meme+";
     EditText editText;
     Button search;
-    ListView list;
+    ListView listview;
     ImageAdapter adapter;
     TextView loading;
     AsyncLoad images;
@@ -45,7 +45,7 @@ public class TopMeme extends Activity {
         loading = (TextView) findViewById(R.id.loading);
         editText = (EditText) findViewById(R.id.edittext);
         search = (Button) findViewById(R.id.search);
-        list = (ListView) findViewById(R.id.list);
+        listview = (ListView) findViewById(R.id.list);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,9 +101,8 @@ public class TopMeme extends Activity {
 
         @Override
         protected void onPostExecute(List<String> list) {
-            int width = editText.getWidth();
-            adapter = new ImageAdapter(TopMeme.this, list, width);
-            TopMeme.this.list.setAdapter(adapter);
+            adapter = new ImageAdapter(TopMeme.this, list, false);
+            listview.setAdapter(adapter);
             loading.setVisibility(View.INVISIBLE);
         }
     }

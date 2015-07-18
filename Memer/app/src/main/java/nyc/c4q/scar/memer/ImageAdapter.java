@@ -31,12 +31,12 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<String> imageList;
-    private int width;
+    private boolean template;
 
-    public ImageAdapter(Context c, List<String> imageList, int width) {
+    public ImageAdapter(Context c, List<String> imageList, boolean template) {
         mContext = c;
         this.imageList = imageList;
-        this.width = width;
+        this.template = template;
     }
 
     public int getCount() {
@@ -59,13 +59,22 @@ public class ImageAdapter extends BaseAdapter {
         else
             imageView = (ImageView) convertView;
 
-        Picasso.with(mContext).load(imageList.get(position)).resize(width, width).into(imageView);
+        Picasso.with(mContext).load(imageList.get(position)).into(imageView);
         final String imageURL = imageList.get(position);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showListViewDialog(imageURL, imageView);
+                if (template) {
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    Intent changeActivity = new Intent(mContext, EditMeme.class);
+                    changeActivity.putExtra("image", bitmap);
+                    mContext.startActivity(changeActivity);
+                } else
+                    showListViewDialog(imageURL, imageView);
             }
         });
 

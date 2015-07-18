@@ -3,7 +3,9 @@ package nyc.c4q.scar.memer;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,13 +27,36 @@ import javax.net.ssl.HttpsURLConnection;
 public class Template extends Activity {
 
     private static final String url = "https://api.imgflip.com/get_memes";
+    private TextView loading;
+    private ListView template_list;
+    private AsyncLoad images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.template);
 
-        ListView template_list = (ListView) findViewById(R.id.template_list);
+        template_list = (ListView) findViewById(R.id.template_list);
+        loading = (TextView) findViewById(R.id.loading);
+
+        new AsyncTask<Void, Void, List<String>>(){
+            @Override
+            protected List<String> doInBackground(Void[] params){
+                if (loadData().size() == 0) {
+                    images = new AsyncLoad();
+                    images.execute();
+                    loading.setVisibility(View.VISIBLE);
+                }
+
+                return loadData();
+            }
+
+            @Override
+            protected void onPostExecute(List<String> images) {
+                showData(images);
+            }
+        }.execute();
+
 
     }
 
@@ -70,5 +95,26 @@ public class Template extends Activity {
             }
             return list;
         }
+
+        @Override
+        protected void onPostExecute(List<String> list) {
+            updateData(list);
+        }
+    }
+
+    private void showData(List<String> images) {
+        ImageAdapter adapter = new ImageAdapter(Template.this, images, true);
+        template_list.setAdapter(adapter);
+        loading.setVisibility(View.INVISIBLE);
+    }
+
+    private List<String> loadData() {
+        mySQLiteOpenHelper mySQLiteOpenHelper = nyc.c4q.scar.memer.mySQLiteOpenHelper.getInstance(this);
+        return mySQLiteOpenHelper.loadData();
+    }
+
+    private void updateData(List<String> images) {
+        mySQLiteOpenHelper mySQLiteOpenHelper = nyc.c4q.scar.memer.mySQLiteOpenHelper.getInstance(this);
+        mySQLiteOpenHelper.insertData(images);
     }
 }
