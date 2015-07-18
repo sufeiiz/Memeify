@@ -31,10 +31,12 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<String> imageList;
+    private int width;
 
-    public ImageAdapter(Context c, List<String> imageList) {
+    public ImageAdapter(Context c, List<String> imageList, int width) {
         mContext = c;
         this.imageList = imageList;
+        this.width = width;
     }
 
     public int getCount() {
@@ -57,7 +59,7 @@ public class ImageAdapter extends BaseAdapter {
         else
             imageView = (ImageView) convertView;
 
-        Picasso.with(mContext).load(imageList.get(position)).resize(400,400).centerCrop().into(imageView);
+        Picasso.with(mContext).load(imageList.get(position)).resize(width, width).into(imageView);
         final String imageURL = imageList.get(position);
 
         imageView.setOnClickListener(new View.OnClickListener() {

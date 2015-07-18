@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         template.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO add template
+                Intent intent = new Intent(MainActivity.this, Template.class);
+                startActivity(intent);
             }
         });
     }
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent changeActivity = new Intent(MainActivity.this, EditMeme.class);
-        changeActivity.putExtra("gallery_image", imageFileUri);
+        changeActivity.putExtra("image", imageFileUri);
         if (imageFileUri != null) {
             startActivity(changeActivity);
         }

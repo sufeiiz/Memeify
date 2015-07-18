@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -32,7 +32,7 @@ public class TopMeme extends Activity {
     private static final String ENDPOINT = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=meme+";
     EditText editText;
     Button search;
-    GridView grid;
+    ListView list;
     ImageAdapter adapter;
     TextView loading;
     AsyncLoad images;
@@ -40,12 +40,12 @@ public class TopMeme extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_meme);
+        setContentView(R.layout.top_meme);
 
         loading = (TextView) findViewById(R.id.loading);
         editText = (EditText) findViewById(R.id.edittext);
         search = (Button) findViewById(R.id.search);
-        grid = (GridView) findViewById(R.id.grid);
+        list = (ListView) findViewById(R.id.list);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,8 +101,9 @@ public class TopMeme extends Activity {
 
         @Override
         protected void onPostExecute(List<String> list) {
-            adapter = new ImageAdapter(TopMeme.this, list);
-            grid.setAdapter(adapter);
+            int width = editText.getWidth();
+            adapter = new ImageAdapter(TopMeme.this, list, width);
+            TopMeme.this.list.setAdapter(adapter);
             loading.setVisibility(View.INVISIBLE);
         }
     }

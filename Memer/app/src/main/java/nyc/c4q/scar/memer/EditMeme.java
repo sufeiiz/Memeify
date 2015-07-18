@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,41 +32,32 @@ import java.util.Date;
 public class EditMeme extends AppCompatActivity implements Serializable {
 
     public static Bitmap bm;
-    public final String IMAGE_FILE = "memer";
+    public final String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private ViewSwitcher viewSwitcher;
-    private Uri uri, uri2;
+    private Uri uri;
+    private Bitmap image;
     private Intent intent;
     private ImageView imageView, imageView2;
-    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
     private boolean isVanilla = true;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-    private SharedPreferences preferences = null;
     private EditText top, bottom, big, small;
-    private String string1, string2;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_meme);
-        preferences = this.getSharedPreferences(IMAGE_FILE, Context.MODE_PRIVATE);
-
-        if (savedInstanceState != null) {
-            isVanilla = (boolean) savedInstanceState.get("isVanilla");
-            uri = savedInstanceState.getParcelable("uri");
-            uri2 = savedInstanceState.getParcelable("uri2");
-        }
+        setContentView(R.layout.edit_meme);
 
         ImageButton changeImage = (ImageButton) findViewById(R.id.change_img);
         ImageButton shareImage = (ImageButton) findViewById(R.id.share);
         ImageButton saveImage = (ImageButton) findViewById(R.id.save);
         Button switcherButton = (Button) findViewById(R.id.switcherButton);
         viewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher);
-        imageView = (ImageView) findViewById(R.id.insert_pic_id);
-        imageView2 = (ImageView) findViewById(R.id.insert_pic_id2);
+        imageView = (ImageView) findViewById(R.id.vanilla_image);
+        imageView2 = (ImageView) findViewById(R.id.demo_image);
         top = (EditText) findViewById(R.id.top);
         bottom = (EditText) findViewById(R.id.bottom);
-        big = (EditText) findViewById(R.id.bigtext);
-        small = (EditText) findViewById(R.id.smalltext);
+        big = (EditText) findViewById(R.id.big);
+        small = (EditText) findViewById(R.id.small);
         top.setMovementMethod(null);
         bottom.setMovementMethod(null);
 
@@ -78,23 +70,23 @@ public class EditMeme extends AppCompatActivity implements Serializable {
         shareImage.setOnClickListener(new shareClickListener());
         saveImage.setOnClickListener(new saveClickListener());
         switcherButton.setOnClickListener(new switchClickListener());
+        showCursor();
 
-        //This loads up any existing savedInstanceStates
         if (savedInstanceState != null) {
-            uri = (Uri) savedInstanceState.get("luckyM");
-        } else {
-            uri = (Uri) getIntent().getExtras().get("luckyM");
-        }
-        imageView.setImageURI(uri);
-        imageView2.setImageURI(uri);
+            isVanilla = (boolean) savedInstanceState.get("isVanilla");
+            uri = savedInstanceState.getParcelable("image");
+        } else
+            uri = getIntent().getExtras().getParcelable("image");
 
-
-        //This sets the layout according to which layout mode is selected
-        if (isVanilla) {
-            Typeface impact = Typeface.createFromAsset(getAssets(), "Impact.ttf");
-            top.setTypeface(impact);
-            bottom.setTypeface(impact);
+        try {
+            image = decodeUri(this, uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+        imageView.setImageBitmap(image);
+        imageView2.setImageBitmap(image);
+
+        showCursor();
     }
 
     /**
@@ -106,14 +98,9 @@ public class EditMeme extends AppCompatActivity implements Serializable {
             removeCursor();
             View v1 = viewSwitcher.getFocusedChild();
             v1.setDrawingCacheEnabled(true);
-
-            Bitmap bm = v1.getDrawingCache();
-            uri2 = getImageUri(getApplicationContext(), bm);
+            bm = v1.getDrawingCache();
+            Uri uri2 = getImageUri(getApplicationContext(), bm);
             Intent shareIntent = new Intent();
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt("image_file", MODE_PRIVATE);
-            editor.commit();
-
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri2);
             shareIntent.setType("image/jpeg");
@@ -139,6 +126,8 @@ public class EditMeme extends AppCompatActivity implements Serializable {
         @Override
         public void onClick(View v) {
             viewSwitcher.showNext();
+            String string1;
+            String string2;
             if (isVanilla) {
                 string1 = top.getText().toString();
                 string2 = bottom.getText().toString();
@@ -218,7 +207,7 @@ public class EditMeme extends AppCompatActivity implements Serializable {
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "memer", null);
         return Uri.parse(path);
     }
 
@@ -267,11 +256,33 @@ public class EditMeme extends AppCompatActivity implements Serializable {
         alertDialog.show();
     }
 
+    public static Bitmap decodeUri(Context c, Uri uri) throws FileNotFoundException {
+        int requiredSize = 2048;
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o);
+
+        int width_tmp = o.outWidth;
+        int height_tmp = o.outHeight;
+        int scale = 1;
+
+        while(true) {
+            if(width_tmp / 2 < requiredSize || height_tmp / 2 < requiredSize)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle toSave) {
         super.onSaveInstanceState(toSave);
-        toSave.putParcelable("luckyM", uri);
-        toSave.putParcelable("luckyM2", uri2);
+        toSave.putParcelable("image", uri);
         toSave.putBoolean("isVanilla", isVanilla);
     }
 }

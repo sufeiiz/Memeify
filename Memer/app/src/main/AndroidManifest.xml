@@ -34,7 +34,10 @@
 
         <activity
             android:name=".TopMeme"
-            android:label="Google"
+            android:noHistory="true" />
+
+        <activity
+            android:name=".Template"
             android:noHistory="true" />
     </application>
 
